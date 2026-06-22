@@ -1,5 +1,6 @@
 import React from 'react';
 import BottomNav from './BottomNav';
+import TopAppBar from './TopAppBar';
 
 export default function HistoryScreen() {
   // Mock Data
@@ -11,11 +12,7 @@ export default function HistoryScreen() {
 
   return (
     <div style={{ backgroundColor: '#e0e0e0', minHeight: '100vh', color: '#101010', paddingBottom: '80px' }}>
-      {/* Top Header */}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '20px', backgroundColor: '#ffffff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-        <div style={{ fontSize: '24px', cursor: 'pointer', marginRight: '20px' }}>☰</div>
-        <div style={{ fontWeight: 'bold', fontSize: '20px' }}>Scan History</div>
-      </div>
+      <TopAppBar title="Scan History" />
 
       {/* Main Body - List View */}
       <div style={{ padding: '20px' }}>

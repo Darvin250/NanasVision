@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './AuthContext';
 import Login from './Login';
 import FarmerDashboard from './FarmerDashboard.jsx';
 import CaptureScreen from './CaptureScreen.jsx';
+import CultivarScreen from './CultivarScreen.jsx';
 import ResultScreen from './ResultScreen.jsx';
 import HistoryScreen from './HistoryScreen.jsx';
 
@@ -47,6 +48,12 @@ export default function App() {
           <Route path="/farmer" element={
             <ProtectedRoute allowedRole="farmer">
               <FarmerDashboard />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/farmer/cultivars" element={
+            <ProtectedRoute allowedRole="farmer">
+              <CultivarScreen />
             </ProtectedRoute>
           } />
 

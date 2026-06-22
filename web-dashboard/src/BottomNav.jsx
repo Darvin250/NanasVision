@@ -6,10 +6,11 @@ export default function BottomNav() {
   const location = useLocation();
 
   const navItems = [
-    { label: 'Dashboard', path: '/farmer', icon: '🏠' },
+    { label: 'Home', path: '/farmer', icon: '🏠' },
+    { label: 'Cultivar', path: '/farmer/cultivars', icon: '🍍' },
     { label: 'Scanner', path: '/farmer/capture', icon: '📷' },
-    { label: 'Cultivars', path: '/farmer/result', icon: '🍍' },
-    { label: 'History', path: '/farmer/history', icon: '👤' },
+    { label: 'Logs', path: '/farmer/history', icon: '📋' },
+    { label: 'Dashboard', path: '/farmer/dashboard', icon: '📊' },
   ];
 
   return (
