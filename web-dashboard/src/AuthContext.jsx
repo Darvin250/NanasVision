@@ -13,8 +13,27 @@ export const AuthProvider = ({ children }) => {
   const [userRole, setUserRole] = useState(null); // 'admin' or 'farmer'
   const [loading, setLoading] = useState(true);
 
+  // Check for the environment variable to skip login for development
+  const SKIP_LOGIN = import.meta.env.VITE_SKIP_LOGIN === 'true';
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (SKIP_LOGIN) {
+      console.warn("--- DEVELOPMENT MODE: LOGIN SKIPPED ---");
+      // Create a mock user object that has the properties your app expects
+      setCurrentUser({
+        uid: 'mock-farmer-uid-123',
+        displayName: 'Dev Farmer',
+        email: 'dev@nanasvision.com',
+      });
+      // Set a default role for testing
+      setUserRole('farmer');
+      setLoading(false);
+      // Return a no-op function because there's no Firebase listener to unsubscribe from
+      return () => {};
+    }
+
+    // Original Firebase authentication logic
+    const unsubscribe = onAuthStateChanged(auth, async (user) => { 
       if (user) {
         // Look up the user's document in Firestore
         const userDocRef = doc(db, 'users', user.uid);
