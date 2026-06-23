@@ -1,52 +1,114 @@
 // src/Login.jsx
 import React, { useEffect } from 'react';
-import { auth, googleProvider } from './firebase';
-import { signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { auth, googleProvider } from './firebase';
+import { signInWithPopup } from 'firebase/auth';
+
+import NanasVisionLogo from './assets/NanasVision_Logo_Word.png';
+import GoogleLogo from './assets/Google_Logo.svg'; // Assumes you have this local asset
 
 export default function Login() {
   const { currentUser, userRole } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect users to their respective dashboards if already logged in
+  // Redirect user if already logged in
   useEffect(() => {
-    if (currentUser && userRole) {
-      if (userRole === 'admin') navigate('/admin');
-      else navigate('/farmer');
+    if (currentUser) {
+      navigate(userRole === 'admin' ? '/admin' : '/farmer');
     }
   }, [currentUser, userRole, navigate]);
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      // After successful sign-in, the onAuthStateChanged listener in
+      // AuthContext will handle user creation and navigation.
     } catch (error) {
-      console.error("Failed to sign in with Google:", error);
-      alert("Login failed. Please try again.");
+      console.error("Error during Google sign-in:", error);
     }
   };
 
   return (
-    <div style={{ backgroundColor: '#e0e0e0', minHeight: '100vh', display: 'flex', flexDirection: 'column', color: '#101010', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
-        {/* Clean Minimalist Logo */}
-        <div style={{ width: '80px', height: '80px', backgroundColor: '#4060a0', borderRadius: '50%', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '24px' }}>NV</div>
-        
-        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: '800' }}>NanasVision</h1>
-        <p style={{ fontSize: '16px', marginBottom: '48px', color: '#555' }}>Identify Pineapple Cultivars seamlessly.</p>
-        
-        <button 
-          onClick={handleGoogleSignIn} 
-          style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffffff', color: '#101010', border: 'none', borderRadius: '24px', padding: '12px 24px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-        >
-          {/* Google G Icon */}
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '24px', height: '24px', marginRight: '12px' }} />
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <img src={NanasVisionLogo} alt="NanasVision Logo" style={styles.logo} />
+        <h1 style={styles.title}>Welcome Back</h1>
+        <p style={styles.subtitle}>
+          Sign in to access your pineapple cultivar analysis dashboard.
+        </p>
+        <button onClick={handleGoogleSignIn} style={styles.googleButton}>
+          <img src={GoogleLogo} alt="Google" style={styles.googleIcon} />
           Sign in with Google
         </button>
+        <p style={styles.footer}>
+          &copy; {new Date().getFullYear()} NanasVision. All rights reserved.
+        </p>
       </div>
-      
-      {/* Abstract Wave / Leaf Pattern at the bottom */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '25%', backgroundColor: '#a0c0e0', borderTopLeftRadius: '50% 100%', borderTopRightRadius: '50% 100%', opacity: 0.6, zIndex: 0 }}></div>
     </div>
   );
 }
+
+// --- Styles ---
+// Using a style object for better organization and reusability
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    backgroundColor: '#f0f2f5',
+    fontFamily: 'sans-serif',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    padding: '40px 30px',
+    borderRadius: '16px',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+    width: '100%',
+    maxWidth: '380px',
+    margin: '20px',
+  },
+  logo: {
+    width: '220px',
+    marginBottom: '24px',
+  },
+  title: {
+    fontSize: '28px',
+    fontWeight: '700',
+    color: '#101010',
+    margin: '0 0 8px 0',
+  },
+  subtitle: {
+    fontSize: '16px',
+    color: '#666',
+    margin: '0 0 32px 0',
+    lineHeight: '1.5',
+  },
+  googleButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '12px',
+    backgroundColor: '#ffffff',
+    border: '1px solid #d0d0d0',
+    borderRadius: '8px',
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#333',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s, box-shadow 0.2s',
+  },
+  googleIcon: {
+    width: '20px',
+    height: '20px',
+    marginRight: '12px',
+  },
+  footer: {
+    marginTop: '32px',
+    fontSize: '12px',
+    color: '#999',
+  },
+};

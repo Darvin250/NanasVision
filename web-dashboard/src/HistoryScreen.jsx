@@ -5,9 +5,18 @@ import TopAppBar from './TopAppBar';
 export default function HistoryScreen() {
   // Mock Data
   const historyData = [
-    { id: 1, species: 'Josapine AC5', date: 'Oct 24, 2023 - 10:42 AM', synced: true },
-    { id: 2, species: 'MD2 AC9', date: 'Oct 24, 2023 - 09:15 AM', synced: true },
-    { id: 3, species: 'Moris Gajah', date: 'Oct 23, 2023 - 03:30 PM', synced: true },
+    { id: 1, species: 'Yankee', date: 'June 26, 2026 - 05:40 PM', synced: true },
+    { id: 2, species: 'Moris', date: 'June 25, 2026 - 03:35 PM', synced: true },
+    { id: 3, species: 'Yankee', date: 'June 14, 2026 - 05:40 PM', synced: true },
+    { id: 4, species: 'Josapine', date: 'June 12, 2026 - 10:42 AM', synced: true },
+    { id: 5, species: 'MD2', date: 'April 24, 2026 - 09:15 AM', synced: true },
+    { id: 6, species: 'Yankee', date: 'April 23, 2026 - 02:30 PM', synced: true },
+    { id: 7, species: 'Moris', date: 'April 22, 2026 - 03:35 PM', synced: true },
+    { id: 8, species: 'Yankee', date: 'April 21, 2026 - 05:40 PM', synced: true },
+    { id: 9, species: 'Moris', date: 'April 18, 2026 - 03:35 PM', synced: true },
+    { id: 10, species: 'Yankee', date: 'April 16, 2026 - 05:40 PM', synced: true },
+    { id: 11, species: 'Moris', date: 'April 15, 2026 - 03:35 PM', synced: true },
+    { id: 12, species: 'Yankee', date: 'April 14, 2026 - 05:40 PM', synced: true },
   ];
 
   return (
@@ -15,7 +24,7 @@ export default function HistoryScreen() {
       <TopAppBar title="Scan History" />
 
       {/* Main Body - List View */}
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
         {historyData.map(item => (
           <div key={item.id} style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '16px', marginBottom: '12px', display: 'flex', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
             {/* Thumbnail */}

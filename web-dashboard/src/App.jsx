@@ -7,6 +7,7 @@ import FarmerDashboard from './FarmerDashboard.jsx';
 import CaptureScreen from './CaptureScreen.jsx';
 import CultivarScreen from './CultivarScreen.jsx';
 import ResultScreen from './ResultScreen.jsx';
+import Dashboard from './Dashboard.jsx';
 import HistoryScreen from './HistoryScreen.jsx';
 
 // Placeholder Components for your Dashboards
@@ -72,6 +73,12 @@ export default function App() {
           <Route path="/farmer/history" element={
             <ProtectedRoute allowedRole="farmer">
               <HistoryScreen />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/farmer/dashboard" element={
+            <ProtectedRoute allowedRole="farmer">
+              <Dashboard />
             </ProtectedRoute>
           } />
           
