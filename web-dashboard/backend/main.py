@@ -18,7 +18,44 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # --- Model Paths ---
 # Ensure these paths are correct for your project structure
 YOLO_MODEL_PATH = "models/yolov8n.pt"
-CLASSIFIER_MODEL_PATH = "models/resNet50_no_aug.pt"
+
+# --- Model Registry ---
+# Define all your available classifier models here.
+# The class names MUST match the training order for each specific model.
+MODEL_REGISTRY = {
+    "mobilenet_v3_small_no_aug": {
+        "path": "models/mobileNetV3_no_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "mobilenet_v3_small"
+    },
+    "mobilenet_v3_small_with_aug": {
+        "path": "models/mobileNetV3_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "mobilenet_v3_small"
+    },
+    "efficientnet_b0_no_aug": {
+        "path": "models/efficientNet_no_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "efficientnet_b0"
+    },
+    "efficientnet_b0_with_aug": {
+        "path": "models/efficientNet_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "efficientnet_b0"
+    },
+    "resnet50_no_aug": {
+        "path": "models/resNet50_no_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "resnet50"
+    },
+    "resnet50_with_aug": {
+        "path": "models/resNet50_aug.pt",
+        "class_names": ["Josapine", "MD2", "Moris", "Yankee"],
+        "architecture": "resnet50"
+    },
+}
+
+ACTIVE_CLASSIFIER = "efficientnet_b0_no_aug" # <-- CHANGE THIS LINE TO SWITCH MODELS
 
 # --- Response Models ---
 class PredictionResponse(BaseModel):
@@ -37,8 +74,12 @@ async def lifespan(app: FastAPI):
     # --- Startup ---
     logging.info("Application startup: Loading ML models...")
     try:
+        active_model_config = MODEL_REGISTRY[ACTIVE_CLASSIFIER]
+        logging.info(f"Loading active classifier: {ACTIVE_CLASSIFIER}")
         ml_models["detector"] = Detector(YOLO_MODEL_PATH)
-        ml_models["classifier"] = Classifier(CLASSIFIER_MODEL_PATH)
+        ml_models["classifier"] = Classifier(model_path=active_model_config["path"], 
+                                             class_names=active_model_config["class_names"],
+                                             architecture=active_model_config["architecture"])
         logging.info("ML models loaded successfully.")
     except Exception as e:
         logging.error(f"Failed to load models on startup: {e}")
@@ -123,15 +164,11 @@ async def predict(file: UploadFile = File(...)):
             message="No pineapple detected. Please retake the photo."
         )
         
-    # --- Crop Image ---
-    try:
-        cropped_image = image.crop(bbox)
-    except Exception as e:
-        logging.error(f"Failed to crop image with bbox {bbox}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to process image after detection.")
-
     # --- Stage 2: Cultivar Classification ---
-    cultivar, confidence = ml_models["classifier"].predict(cropped_image)
+    # As requested, sending the original image to the classifier, not the cropped one.
+    # YOLO is only used to confirm the presence of a pineapple.
+    logging.info("Skipping crop step. Sending original image to classifier.")
+    cultivar, confidence = ml_models["classifier"].predict(image)
     
     confidence = round(confidence, 2)
 

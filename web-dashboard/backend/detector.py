@@ -27,7 +27,7 @@ class Detector:
         """
         logging.info("Running YOLOv8 pineapple detection...")
         
-        results = self.model(image, conf=0.5, verbose=False)
+        results = self.model(image, conf=0.30, verbose=False) # Lowered confidence for testing
 
         # Results are a list, but we process one image at a time.
         # The boxes are already sorted by confidence.
@@ -37,5 +37,5 @@ class Detector:
             logging.info(f"Pineapple detected with confidence {best_box.conf[0]:.2f} at {bbox}")
             return bbox
         
-        logging.warning("No pineapple detected with confidence > 0.5.")
+        logging.warning(f"No pineapple detected with confidence > 0.30.")
         return None
